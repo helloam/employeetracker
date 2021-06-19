@@ -21,7 +21,7 @@ function init () {
     inquirer.prompt ([
         {
             type: "list",
-            message: "What information are you submitting?",
+            message: "What action do you want to take?",
             name: "options",
             choices: [
                 "Add new employee",
@@ -165,30 +165,40 @@ const viewDepartments = () => {
 }
 
 const updateEmployeeRole = () => {
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "employeeID",
-            message: "What is this employee's ID?"
-        },
-        {
-            type: "input",
-            name: "updatedRole",
-            message: "What is their new role?"
-        }
-    ]).then((answers) => {
-        connection.query("UPDATE employee SET ? WHERE ?",
-        [
+    connection.query("SELECT * FROM employee", function (err, res) {
+        if(err) throw err;
+        inquirer.prompt([
             {
-                role_id: answers.updatedRole
-            },
-            {
-                id: answers.employeeID
+                name: "updatedRole",
+                type: "list",
+                message: "Which employee's role do you need to update?",
+                choices: function () {
+                    let choiceList = [];
+                    for (var i = 0; i < res.length; i++) {
+                        choiceList.push(res[i].employee_name);
+                    }
+                    return choiceList;
+                }
+            
             }
-        ], (err) => {
-            if(err) throw err;
-            console.log("Role update successful.");
-            init();
+        ])
+        .then(function(answer) {
+            inquirer.prompt([
+                {
+                    name: "updateRole",
+                    type: "input",
+                    message: "What is there employee ID for this new role?"
+                },
+            ])
+            .then(function (newRole) {
+                connection.query("UPDATE employee SET role_id = ? WHERE employee_name = ?", [newRole.updateRole, answer.updatedRole]);
+                console.log("Employee role update succesful.");
+                init();
+            })
         });
-    });
-}
+    })
+};
+
+       
+ 
+
