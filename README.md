@@ -11,6 +11,6 @@ The end goal was to build a command-line application that at a minimum allows th
   * Update employee roles
 
 
-[My Walkthrough](http://g.recordit.co/5alUrw5SCr.gif)
+[Video Walkthrough](http://g.recordit.co/5alUrw5SCr.gif)
 
-![Alt Text](http://g.recordit.co/5alUrw5SCr.gif)
+
